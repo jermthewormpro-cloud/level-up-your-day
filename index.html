@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Level Up Your Day - Master Edition</title>
+    <title>Level Up Your Day - Sound Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
    
     <style>
-        /* 1. TYPOGRAPHY & BODY */
         body {
           background: linear-gradient(135deg, #121212 0%, #1a1a1a 100%);
           color: #e0e0e0;
@@ -17,13 +16,14 @@
           padding: 20px;
           min-height: 100vh;
           margin: 0;
+          transition: background 0.5s;
         }
+        /* Level Up Flash Animation */
+        .level-up-flash { background: #00ff9d !important; transition: 0.1s; }
+
         h1, h2, h3 { font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
         h1 { color: #00ff9d; text-shadow: 0 0 15px rgba(0, 255, 157, 0.4); }
-        h2, h3 { color: #ffffff; }
         .container { max-width: 500px; margin: 0 auto; }
-
-        /* 2. CARDS */
         .card {
           background-color: #1e1e1e;
           border-radius: 16px;
@@ -32,389 +32,182 @@
           border: 1px solid #333;
           box-shadow: 0 10px 20px rgba(0,0,0,0.4);
         }
-        .highlight-card { border: 1px solid #00ff9d; box-shadow: 0 0 15px rgba(0, 255, 157, 0.1); }
-        .danger-box { border: 1px solid #ff4757; }
-
-        /* METRICS STYLES */
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 15px;
-        }
-        .metric-label { font-size: 0.75rem; color: #888; margin-bottom: 5px; text-transform: uppercase; }
+        .highlight-card { border: 1px solid #00ff9d; }
+        .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+        .metric-label { font-size: 0.75rem; color: #888; text-transform: uppercase; }
         .metric-value { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; color: #00ff9d; font-weight: 700; }
-
-        /* 3. INPUTS & BUTTONS */
-        .input-icon { position: relative; margin-bottom: 10px; }
-        .input-icon i { position: absolute; left: 15px; top: 12px; color: #888; }
-        input {
-          padding: 12px 12px 12px 40px;
-          border-radius: 8px; border: 1px solid #333;
-          background: #252525; color: white; width: 100%; box-sizing: border-box;
-        }
-        .input-group { display: flex; gap: 10px; align-items: center; }
-        .input-group input { flex-grow: 1; padding: 12px; }
-
-        button {
-          padding: 12px 20px; border-radius: 8px; border: none;
-          cursor: pointer; font-weight: 600;
-          background-color: #00ff9d; color: #121212;
-          transition: 0.3s; font-family: 'Orbitron', sans-serif;
-          text-transform: uppercase; font-size: 0.8rem;
-        }
-        button:hover { background-color: #00cc7a; transform: scale(1.02); }
-        button:disabled { background-color: #444; color: #888; cursor: not-allowed; transform: none; }
-        .danger-btn { background-color: #ff4757; color: white; width: 100%; margin-top: 5px;}
-
-        /* 4. PROGRESS BARS */
-        .progress-bar-bg { background: #333; height: 12px; border-radius: 6px; margin: 10px 0; overflow: hidden; }
-        .progress-bar-fill { height: 100%; width: 0%; transition: width 0.6s ease; }
+        .input-group { display: flex; gap: 10px; margin-top: 10px; }
+        input { padding: 12px; border-radius: 8px; border: 1px solid #333; background: #252525; color: white; width: 100%; }
+        button { padding: 12px 20px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; background-color: #00ff9d; color: #121212; font-family: 'Orbitron', sans-serif; text-transform: uppercase; font-size: 0.8rem; transition: 0.2s; }
+        .nav-bar { display: flex; gap: 8px; margin-bottom: 25px; justify-content: center; }
+        .nav-bar button { flex: 1; font-size: 0.65rem; padding: 10px 5px; }
+        .progress-bar-bg { background: #333; height: 10px; border-radius: 5px; margin: 10px 0; overflow: hidden; }
+        .progress-bar-fill { height: 100%; width: 0%; transition: width 0.5s ease; }
         .xp-bar { background: #a29bfe; }
-        .goal-bar { background: #00ff9d; }
-
-        /* 5. NAVIGATION */
-        .nav-bar { display: flex; gap: 8px; margin-bottom: 25px; justify-content: center; flex-wrap: wrap; }
-        .nav-bar button { flex: 1; font-size: 0.65rem; padding: 10px 5px; min-width: 80px; }
-
-        /* 6. CALENDAR */
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-top: 15px; }
-        .day-box { background: #252525; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-size: 0.8em; }
-        .day-balanced { border: 2px solid #00ff9d; color: #00ff9d; }
-        .day-over { border: 2px solid #ff4757; color: #ff4757; }
-
-        /* 7. ACHIEVEMENTS */
-        .badge-card { background: #252525; padding: 15px; border-radius: 12px; border: 1px solid #444; opacity: 0.3; filter: grayscale(1); transition: 0.5s; }
-        .badge-unlocked { opacity: 1; filter: grayscale(0); border: 1px solid #ffc107; box-shadow: 0 0 10px rgba(255, 193, 7, 0.3); }
-        .badge-icon { font-size: 1.8rem; margin-bottom: 8px; display: block; }
-
-        /* UTILS */
         .hidden { display: none; }
         .small-text { font-size: 0.75rem; color: #888; }
-        .link { color: #00ff9d; cursor: pointer; font-weight: bold; }
-        hr { border: 0; border-top: 1px solid #333; margin: 20px 0; }
     </style>
 </head>
 <body>
 
+<audio id="levelup-sound" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3" preload="auto"></audio>
+
 <div class="container">
-  <header>
-    <h1><i class="fa-solid fa-gamepad"></i> Level Up</h1>
-  </header>
+  <h1><i class="fa-solid fa-gamepad"></i> Level Up</h1>
 
   <section id="auth-section">
-    <div id="login-form" class="card">
-      <h2>Player Login</h2>
-      <div class="input-icon"><i class="fa-solid fa-envelope"></i><input type="email" id="login-email" placeholder="Email"></div>
-      <div class="input-icon"><i class="fa-solid fa-lock"></i><input type="password" id="login-password" placeholder="Password"></div>
-      <button onclick="loginUser()">Log In</button>
-      <p class="small-text">New player? <span class="link" onclick="showRegister()">Register</span></p>
-    </div>
-
-    <div id="register-form" class="card hidden">
-      <h2>Create Account</h2>
-      <div class="input-icon"><i class="fa-solid fa-envelope"></i><input type="email" id="reg-email" placeholder="Email"></div>
-      <div class="input-icon"><i class="fa-solid fa-user"></i><input type="text" id="reg-username" placeholder="Display Name"></div>
-      <div class="input-icon"><i class="fa-solid fa-lock"></i><input type="password" id="reg-password" placeholder="Password"></div>
-      <button onclick="registerUser()">Sign Up</button>
-      <p class="small-text">Have account? <span class="link" onclick="showLogin()">Login</span></p>
+    <div class="card">
+      <h2>Login</h2>
+      <input type="email" id="login-email" placeholder="Email"><br><br>
+      <input type="password" id="login-password" placeholder="Password"><br><br>
+      <button onclick="loginUser()">Enter Game</button>
+      <p class="small-text">No account? <span style="color:#00ff9d; cursor:pointer" onclick="registerUserPrompt()">Sign Up</span></p>
     </div>
   </section>
 
   <div id="app-content" class="hidden">
-   
     <nav class="nav-bar">
-      <button onclick="showSection('dashboard')"><i class="fa-solid fa-house"></i> Dash</button>
-      <button onclick="showSection('calendar')"><i class="fa-solid fa-calendar"></i> Cal</button>
-      <button onclick="showSection('mission')"><i class="fa-solid fa-rocket"></i> Mission</button>
-      <button onclick="showSection('achievements')"><i class="fa-solid fa-trophy"></i> Stats</button>
-      <button onclick="showSection('settings')"><i class="fa-solid fa-gear"></i></button>
-      <button onclick="logout()" style="background:#ff4757"><i class="fa-solid fa-power-off"></i></button>
+      <button onclick="showSection('dashboard')">Dash</button>
+      <button onclick="showSection('mission')">Mission</button>
+      <button onclick="logout()" style="background:#ff4757; color:white;">Exit</button>
     </nav>
 
     <div id="dashboard-section">
       <div class="card">
-        <h2 id="welcome-msg">Welcome, Player</h2>
+        <h2 id="welcome-msg">Hello</h2>
         <div class="metrics-grid">
             <div><p class="metric-label">Level</p><p class="metric-value" id="user-level">1</p></div>
-            <div><p class="metric-label">Total XP</p><p class="metric-value" id="user-xp">0</p></div>
-            <div><p class="metric-label">Avg Play</p><p class="metric-value" id="avg-minutes">0</p></div>
-            <div><p class="metric-label">Streak</p><p class="metric-value" id="goal-streak">0</p></div>
+            <div><p class="metric-label">XP</p><p class="metric-value" id="user-xp">0</p></div>
         </div>
-       
-        <div style="margin-top: 20px; text-align: left;">
-            <p class="small-text" style="color: #a29bfe; margin-bottom: 5px;">Level Progress: <span id="xp-detail">0 / 500</span> XP</p>
+        <div style="margin-top:15px;">
+            <p class="small-text" style="color:#a29bfe">Progress to Next Level</p>
             <div class="progress-bar-bg"><div id="xp-progress-bar" class="progress-bar-fill xp-bar"></div></div>
         </div>
       </div>
-
+     
       <div class="card highlight-card">
-        <h3><i class="fa-solid fa-clock"></i> Log Playtime</h3>
+        <h3>Log Playtime</h3>
         <div class="input-group">
-          <input type="number" id="log-input" placeholder="Minutes">
-          <button onclick="logTime()">Log</button>
+            <input type="number" id="log-input" placeholder="Minutes">
+            <button onclick="logTime()">Log</button>
         </div>
-        <div id="feedback-box" class="hidden">
-            <div class="progress-bar-bg" style="margin-top: 20px;"><div id="progress-bar" class="progress-bar-fill goal-bar"></div></div>
-            <p id="feedback-tips" class="small-text"></p>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>Daily Limit</h3>
-        <div class="input-group">
-          <input type="number" id="goal-input" placeholder="Min">
-          <button onclick="setGoal()">Set</button>
-        </div>
-        <p class="small-text" style="margin-top: 10px;">Goal: <span id="display-goal">120</span> min</p>
-      </div>
-    </div>
-
-    <div id="calendar-section" class="hidden">
-      <div class="card">
-        <h3 id="calendar-month-name">Month</h3>
-        <div class="calendar-grid"><div class="small-text">S</div><div class="small-text">M</div><div class="small-text">T</div><div class="small-text">W</div><div class="small-text">T</div><div class="small-text">F</div><div class="small-text">S</div></div>
-        <div id="calendar-days" class="calendar-grid"></div>
       </div>
     </div>
 
     <div id="mission-section" class="hidden">
       <div class="card highlight-card">
-        <h2 style="color: #00ff9d;"><i class="fa-solid fa-khanda"></i> Active Side Quest</h2>
-        <div style="text-align: left; margin-top: 15px;">
-          <p><strong>Challenge:</strong></p>
-          <p id="mission-challenge" style="background:#252525; padding:10px; border-radius:8px; border-left:4px solid #00ff9d;"></p>
-          <p><strong>Pro Tip:</strong></p>
-          <p id="mission-tip" style="background:#252525; padding:10px; border-radius:8px; border-left:4px solid #ffc107;"></p>
-        </div>
-        <button id="complete-mission-btn" onclick="completeMission()" style="width:100%; margin-top:15px; background:#ffc107;">Mission Accomplished (+50 XP)</button>
-      </div>
-
-      <div class="card" id="mission-status-card">
-        <h3 id="mission-status-title">Status</h3>
-        <p id="mission-status-msg" class="small-text"></p>
+        <h2>Active Quest</h2>
+        <p id="mission-challenge" style="background:#252525; padding:10px; border-radius:8px; border-left:4px solid #00ff9d; text-align:left;"></p>
+        <p id="mission-tip" style="background:#252525; padding:10px; border-radius:8px; border-left:4px solid #ffc107; text-align:left;"></p>
+        <button id="mission-btn" onclick="completeMission()" style="width:100%; background:#ffc107;">Complete (+50 XP)</button>
       </div>
     </div>
-
-    <div id="achievements-section" class="hidden">
-        <div class="card">
-            <h2>Trophy Room</h2>
-            <div id="achievements-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;"></div>
-        </div>
-    </div>
-
-    <div id="settings-section" class="hidden">
-      <div class="card">
-        <h3>Edit Profile</h3>
-        <input type="text" id="settings-username" placeholder="Name">
-        <button onclick="updateProfile()" style="margin-top: 10px; width: 100%;">Save</button>
-      </div>
-      <div class="card danger-box">
-        <h3 style="color:#ff4757">Danger Zone</h3>
-        <button class="danger-btn" onclick="clearHistory()">Clear History</button>
-        <button class="danger-btn" onclick="deleteAccount()">Delete Account</button>
-      </div>
-    </div>
-
   </div>
 </div>
 
 <script>
-// --- DATA ---
 let currentEmail = "";
-let userData = { username: "", password: "", goal: 120, history: [], xp: 0, questsCompleted: 0, achievements: [] };
+let userData = { username: "", password: "", xp: 0, history: [], questsCompleted: 0 };
 
-const gameFacts = ["Surgeons who play games make 37% fewer errors.", "The PS2 is the best selling console.", "Gaming can improve 3D spatial awareness.", "Esports is a varsity sport in 150+ colleges."];
-const allChallenges = [
-  "Do 10 pushups.", "Do 20 jumping jacks.", "Drink 1 glass of water.", "Stretch for 2 mins.", "Clean desk for 1 min.", "Do 15 squats.", "Look out window for 3 mins.", "Message a friend.", "Hold plank for 30s.", "Touch toes for 20s.", "Do 10 high knees.", "Put away 5 pieces of laundry.", "Wipe monitor.", "Refill water bottle.", "Fix your bed.", "Write 3 gratitudes.", "Do 10 deep breaths.", "Walk to another room.", "Do 5 lunges per leg.", "Clear Downloads folder.", "Do 20 shoulder rolls.", "Eat healthy snack.", "Wall sit for 30s.", "Wash face with cold water.", "Do 15 calf raises.", "Tidy cables.", "Shadowbox for 30s.", "Shake limbs for 20s.", "Do 10 arm circles.", "Pick up 3 pieces of trash.", "Meditate for 1 min.", "Balance on 1 leg 20s.", "Do 5 burpees.", "Clap hands 20 times.", "Sit perfectly straight.", "Unsubscribe from 1 junk email.", "Do 10 neck tilts.", "Jog in place 1 min.", "Clean mousepad.", "Empty trash bin.", "Do 10 wrist circles.", "Tense/release all muscles.", "Organize phone apps.", "Put on fresh socks.", "Do 10 side-bends.", "Squeeze shoulder blades 10x.", "Do 10 mountain climbers.", "Hand massage 1 min.", "Stretch triceps.", "Write 1 sentence journal.", "Think of 1 goal for tomorrow.", "Wipe keyboard.", "Do 5 slow pushups.", "Hold breath 10s.", "Do 20 flutter kicks.", "Check water levels.", "Fresh air 10 breaths.", "Do 15 glute bridges.", "Tidy bookshelf.", "Do 10 bicep curls (water bottle).", "Rotate ankles 10x.", "Stand up/sit down 10x.", "Superman stretch 30s.", "Dust PC/Console.", "Change sitting position.", "Smile in mirror.", "Do 10 jumping squats.", "Donate 1 item.", "Fold 1 piece of laundry.", "Do 10 lateral raises.", "Child's pose 30s.", "No sound for 2 mins.", "Do 15 crunches.", "Organize desktop icons.", "Charge phone.", "Do 10 cat-cow stretches.", "Clear browser cache.", "Do 10 high-steps.", "Check urgent emails.", "Wall stretch chest 1 min.", "Do 10 wall-pushups.", "Clean headset earcups.", "Squat with eyes closed 5x.", "Hold breath 5s.", "Do 20 seal jumps.", "Check internet speed.", "Update 1 software.", "Think of a new skill.", "Do 10 floor-touches.", "Sit quiet 60s.", "Do 15 bicycle crunches."
-];
-const allTips = [
-  "Blink often for eye health.", "Keep feet flat.", "Use 20-20-20 rule.", "Monitor at eye level.", "Lower brightness at night.", "Take 5-min breaks.", "Clean mouse sensor.", "Avoid sugar crashes.", "Keep wrists straight.", "Blue light filters help.", "Good lighting saves eyes.", "Hydration = speed.", "Lower volume saves ears.", "Walk if you get tilted.", "Stretch forearms.", "Clean workspace = focus.", "Sleep is a brain buff.", "Use Focus Mode.", "Set timers.", "High-protein snacks last.", "Fresh oxygen helps logic.", "Elbows at 90 degrees.", "Listen to pain.", "Gaming is a marathon.", "Breathe while loading.", "Warm up hands.", "Optimize PC power.", "Check ping first.", "Turn off background apps.", "Don't eat at desk.", "Review replays.", "One goal per session.", "Adjust sensitivity.", "Mute toxic players.", "Stay positive.", "Exercise for stamina.", "No games before bed.", "Cool room temp.", "Hard vs Cloth pads.", "Check deadzones.", "Sit 20-30 inches away.", "Support your back.", "Don't hold breath.", "Visualize victory.", "Healthy snacks nearby.", "Clean PC filters.", "Update GPU drivers.", "Wired > Wireless.", "Take shoes off.", "Stretch calves.", "Warm up aim.", "Look at distant objects.", "Try standing desk.", "Limit caffeine.", "Organize UI.", "Don't play hungry.", "Lo-fi music focus.", "Keep a notebook.", "Reward tasks.", "Check mic levels.", "Clean glasses.", "Phone away.", "Master 1 character.", "Watch pros.", "10 breaths if you lose.", "Check posture.", "Tidy room.", "Natural light.", "Pace yourself.", "Learn shortcuts.", "Eat veggies.", "Switch genres.", "Power nap.", "Desk height.", "Low sodium.", "Mouse grip check.", "Wrist rest.", "Mindfulness downtime.", "Talk nice.", "Map knowledge.", "Check patches.", "Clean controllers.", "No 'one more game'.", "Good chair.", "Clear floor cables.", "Stretch hamstrings.", "Eye yoga.", "Routine consistency.", "Vary sensitivity.", "Record yourself.", "Play with friends.", "Wash hands.", "Bathroom breaks.", "Notice headaches.", "Process > Result.", "Stand up every hour."
-];
+const allChallenges = ["Do 10 pushups.", "Drink water.", "Stretch for 1 min.", "Clean your desk.", "Do 15 squats.", "Do 20 jumping jacks.", "Wipe your screen."];
+const allTips = ["Blink often.", "Sit straight.", "Take a 5 min break.", "Stay hydrated.", "Rest your eyes.", "Check your posture."];
 
-let challengePool = [], tipPool = [];
-
-const achievementList = [
-    { id: 'first_mission', name: 'First Blood', desc: 'Complete 1 Side Quest', icon: 'fa-shuttle-space', color: '#4db8ff' },
-    { id: 'streak_3', name: 'Consistent', desc: 'Reach a 3-Day Streak', icon: 'fa-fire', color: '#ff4757' },
-    { id: 'xp_1000', name: 'Veteran', desc: 'Reach 1,000 Total XP', icon: 'fa-crown', color: '#ffc107' },
-    { id: 'missions_10', name: 'Quest Master', desc: 'Complete 10 Side Quests', icon: 'fa-scroll', color: '#00ff9d' }
-];
-
-// --- CORE FUNCTIONS ---
 function showSection(id) {
-  ['dashboard','calendar','mission','achievements','settings'].forEach(s => document.getElementById(s+'-section').classList.add('hidden'));
-  document.getElementById(id+'-section').classList.remove('hidden');
-  if(id==='calendar') renderCalendar();
-  if(id==='mission') renderMission();
-  if(id==='achievements') { checkAchievements(); renderAchievements(); }
-}
-
-function saveData() { localStorage.setItem("user_"+currentEmail, JSON.stringify(userData)); }
-
-function loadUserData(email) {
-  const saved = localStorage.getItem("user_"+email);
-  if(!saved) return false;
-  currentEmail = email; userData = JSON.parse(saved);
-  document.getElementById("auth-section").classList.add("hidden");
-  document.getElementById("app-content").classList.remove("hidden");
-  document.getElementById("welcome-msg").innerText = "Welcome, " + userData.username;
-  refreshUI();
-  return true;
-}
-
-function refreshUI() {
-  document.getElementById("display-goal").innerText = userData.goal;
-  updateMetrics();
-  updateFeedback();
-}
-
-function updateMetrics() {
-    const historyMap = getHistoryMap();
-    const today = new Date();
-    let total7 = 0, count7 = 0;
-    for(let i=0; i<7; i++){
-        let d = new Date(today); d.setDate(today.getDate()-i);
-        let s = d.toLocaleDateString();
-        if(historyMap[s]){ total7 += historyMap[s]; count7++; }
-    }
-    document.getElementById("avg-minutes").innerText = count7 > 0 ? Math.round(total7/count7) : 0;
-
-    let streak = 0;
-    for(let i=1; i<=365; i++){
-        let d = new Date(today); d.setDate(today.getDate()-i);
-        let s = d.toLocaleDateString();
-        let m = historyMap[s] || 0;
-        if(m > 0 && m <= userData.goal) streak++; else if(m===0) break; else break;
-    }
-    document.getElementById("goal-streak").innerText = streak;
-
-    // XP & LEVEL
-    const xpPerLevel = 500;
-    const currentLevel = Math.floor(userData.xp / xpPerLevel) + 1;
-    const xpInLevel = userData.xp % xpPerLevel;
-    document.getElementById("user-xp").innerText = userData.xp;
-    document.getElementById("user-level").innerText = currentLevel;
-    document.getElementById("xp-detail").innerText = `${xpInLevel} / ${xpPerLevel}`;
-    document.getElementById("xp-progress-bar").style.width = (xpInLevel/xpPerLevel*100) + "%";
-}
-
-function getHistoryMap() {
-    const map = {};
-    userData.history.forEach(e => map[e.date] = (map[e.date] || 0) + e.minutes);
-    return map;
-}
-
-// --- LOGIC ---
-function logTime() {
-  const mins = parseInt(document.getElementById("log-input").value);
-  if(mins){
-    userData.history.push({ date: new Date().toLocaleDateString(), minutes: mins });
-    saveData(); refreshUI(); document.getElementById("log-input").value = "";
+  document.getElementById('dashboard-section').classList.add('hidden');
+  document.getElementById('mission-section').classList.add('hidden');
+  document.getElementById(id + '-section').classList.remove('hidden');
+  if(id === 'mission') {
+    document.getElementById("mission-challenge").innerText = "Challenge: " + allChallenges[Math.floor(Math.random()*allChallenges.length)];
+    document.getElementById("mission-tip").innerText = "Tip: " + allTips[Math.floor(Math.random()*allTips.length)];
+    document.getElementById("mission-btn").disabled = false;
+    document.getElementById("mission-btn").innerText = "Complete (+50 XP)";
   }
 }
 
-function setGoal() {
-  const g = parseInt(document.getElementById("goal-input").value);
-  if(g){ userData.goal = g; saveData(); refreshUI(); }
+function loginUser() {
+  const e = document.getElementById("login-email").value;
+  const p = document.getElementById("login-password").value;
+  const saved = localStorage.getItem("user_" + e);
+  if(saved) {
+    const data = JSON.parse(saved);
+    if(data.password === p) {
+      currentEmail = e;
+      userData = data;
+      // Fix missing data
+      if (isNaN(userData.xp) || userData.xp === undefined) userData.xp = 0;
+     
+      document.getElementById("auth-section").classList.add("hidden");
+      document.getElementById("app-content").classList.remove("hidden");
+      document.getElementById("welcome-msg").innerText = "Player: " + userData.username;
+      updateMetrics();
+    } else { alert("Wrong password"); }
+  } else { alert("User not found"); }
+}
+
+function registerUserPrompt() {
+  const e = prompt("Enter Email:");
+  const u = prompt("Enter Username:");
+  const p = prompt("Enter Password:");
+  if(e && u && p) {
+    const newData = { username: u, password: p, xp: 0, history: [], questsCompleted: 0 };
+    localStorage.setItem("user_" + e, JSON.stringify(newData));
+    alert("Registered!");
+  }
+}
+
+function logTime() {
+  const mins = parseInt(document.getElementById("log-input").value);
+  if(!isNaN(mins)) {
+    userData.history.push({ date: new Date().toLocaleDateString(), mins: mins });
+    saveData();
+    document.getElementById("log-input").value = "";
+    alert("Time Logged!");
+  }
 }
 
 function completeMission() {
-    userData.xp += 50; userData.questsCompleted += 1;
-    const btn = document.getElementById("complete-mission-btn");
-    btn.innerHTML = "XP EARNED!"; btn.disabled = true;
-    saveData(); updateMetrics();
-}
+  const oldLevel = Math.floor((userData.xp || 0) / 500) + 1;
+  userData.xp = (userData.xp || 0) + 50;
+  const newLevel = Math.floor(userData.xp / 500) + 1;
+ 
+  saveData();
+  updateMetrics();
+ 
+  document.getElementById("mission-btn").disabled = true;
+  document.getElementById("mission-btn").innerText = "Quest Finished!";
 
-function getUniqueItem(source, pool) {
-  if (pool.length === 0) { for(let i=0; i<source.length; i++) pool.push(i); pool.sort(()=>Math.random()-0.5); }
-  return source[pool.pop()];
-}
-
-function renderMission() {
-  document.getElementById("mission-challenge").innerText = getUniqueItem(allChallenges, challengePool);
-  document.getElementById("mission-tip").innerText = getUniqueItem(allTips, tipPool);
-  document.getElementById("complete-mission-btn").disabled = false;
-  document.getElementById("complete-mission-btn").innerHTML = "Mission Accomplished (+50 XP)";
-
-  const todayStr = new Date().toLocaleDateString();
-  const total = getHistoryMap()[todayStr] || 0;
-  const msg = document.getElementById("mission-status-msg");
-  if(total === 0) msg.innerText = "No time logged today.";
-  else if(total <= userData.goal) msg.innerText = "You are currently within your limits. Great balance!";
-  else msg.innerText = "You have exceeded your limit. Time for a real-life side quest.";
-}
-
-function checkAchievements() {
-    achievementList.forEach(ach => {
-        if (userData.achievements.includes(ach.id)) return;
-        let met = false;
-        if (ach.id === 'first_mission' && userData.questsCompleted >= 1) met = true;
-        if (ach.id === 'streak_3' && parseInt(document.getElementById("goal-streak").innerText) >= 3) met = true;
-        if (ach.id === 'xp_1000' && userData.xp >= 1000) met = true;
-        if (ach.id === 'missions_10' && userData.questsCompleted >= 10) met = true;
-        if (met) { userData.achievements.push(ach.id); alert("🏆 ACHIEVEMENT: " + ach.name); }
-    });
-    saveData();
-}
-
-function renderAchievements() {
-    const grid = document.getElementById("achievements-grid");
-    grid.innerHTML = "";
-    achievementList.forEach(ach => {
-        const unlocked = userData.achievements.includes(ach.id);
-        grid.innerHTML += `<div class="badge-card ${unlocked?'badge-unlocked':''}">
-            <i class="fa-solid ${ach.icon} badge-icon" style="color:${ach.color}"></i>
-            <span class="small-text" style="color:white; font-weight:bold">${ach.name}</span><br>
-            <span style="font-size:0.6rem">${ach.desc}</span>
-        </div>`;
-    });
-}
-
-function renderCalendar() {
-  const d = new Date(), y = d.getFullYear(), m = d.getMonth();
-  document.getElementById("calendar-month-name").innerText = d.toLocaleString('default', { month: 'long' });
-  const container = document.getElementById("calendar-days"); container.innerHTML = "";
-  const first = new Date(y, m, 1).getDay(), last = new Date(y, m+1, 0).getDate();
-  const map = getHistoryMap();
-  for(let i=0; i<first; i++) container.innerHTML += "<div></div>";
-  for(let i=1; i<=last; i++){
-    let ds = new Date(y,m,i).toLocaleDateString(), mins = map[ds] || 0;
-    let cls = "day-box";
-    if(mins > 0) cls += (mins <= userData.goal) ? " day-balanced" : " day-over";
-    container.innerHTML += `<div class="${cls}">${i}</div>`;
+  // Trigger Sound & Flash if Level Up
+  if (newLevel > oldLevel) {
+    playLevelUpEffect();
   }
 }
 
-function updateFeedback() {
-  const total = getHistoryMap()[new Date().toLocaleDateString()] || 0;
-  const box = document.getElementById("feedback-box"); box.classList.remove("hidden");
-  const bar = document.getElementById("progress-bar");
-  let p = (total/userData.goal)*100; if(p>100) p=100; bar.style.width = p+"%";
-  document.getElementById("feedback-tips").innerText = total <= userData.goal ? "Status: Balanced" : "Status: Over Limit";
+function playLevelUpEffect() {
+  // Play Sound
+  const sound = document.getElementById("levelup-sound");
+  sound.currentTime = 0;
+  sound.play();
+
+  // Visual Flash
+  document.body.classList.add("level-up-flash");
+  setTimeout(() => {
+    document.body.classList.remove("level-up-flash");
+    alert("✨ LEVEL UP! You reached Level " + (Math.floor(userData.xp / 500) + 1) + " ✨");
+  }, 200);
 }
 
-// --- AUTH ---
-function showRegister() { document.getElementById("login-form").classList.add("hidden"); document.getElementById("register-form").classList.remove("hidden"); }
-function showLogin() { document.getElementById("register-form").classList.add("hidden"); document.getElementById("login-form").classList.remove("hidden"); }
-function registerUser() {
-  const e = document.getElementById("reg-email").value, u = document.getElementById("reg-username").value, p = document.getElementById("reg-password").value;
-  if(!e || !u || !p) return alert("Fill all fields");
-  if(localStorage.getItem("user_"+e)) return alert("Email exists");
-  localStorage.setItem("user_"+e, JSON.stringify({username:u, password:p, goal:120, history:[], xp:0, questsCompleted:0, achievements:[]}));
-  alert("Success! Login now."); showLogin();
+function updateMetrics() {
+  const safeXP = isFinite(userData.xp) ? userData.xp : 0;
+  const level = Math.floor(safeXP / 500) + 1;
+  const xpInLevel = safeXP % 500;
+ 
+  document.getElementById("user-xp").innerText = safeXP;
+  document.getElementById("user-level").innerText = level;
+  document.getElementById("xp-progress-bar").style.width = (xpInLevel / 500 * 100) + "%";
 }
-function loginUser() {
-  const e = document.getElementById("login-email").value, p = document.getElementById("login-password").value;
-  const data = JSON.parse(localStorage.getItem("user_"+e));
-  if(data && data.password === p) { localStorage.setItem("lastUser", e); loadUserData(e); } else alert("Error");
-}
-function logout() { localStorage.removeItem("lastUser"); location.reload(); }
-function updateProfile() { userData.username = document.getElementById("settings-username").value; saveData(); location.reload(); }
-function clearHistory() { if(confirm("Clear history?")){ userData.history = []; saveData(); refreshUI(); } }
-function deleteAccount() { if(confirm("Delete everything?")){ localStorage.removeItem("user_"+currentEmail); logout(); } }
 
-window.onload = () => { const last = localStorage.getItem("lastUser"); if(last) loadUserData(last); };
+function saveData() { localStorage.setItem("user_" + currentEmail, JSON.stringify(userData)); }
+function logout() { location.reload(); }
 </script>
 </body>
 </html>
