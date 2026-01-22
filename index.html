@@ -3,303 +3,734 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Level Up Master - Ultimate Edition</title>
+    <title>Level Up Your Day Tracker</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="icon" href="https://img.icons8.com/fluency/96/000000/game-controller.png">
-    <link rel="apple-touch-icon" href="https://img.icons8.com/fluency/96/000000/game-controller.png">
-   
+    
     <style>
+        /* 1. TYPOGRAPHY & BODY */
         body {
-            background: linear-gradient(135deg, #121212 0%, #1a1a1a 100%);
-            color: #e0e0e0;
-            font-family: 'Inter', sans-serif;
-            text-align: center;
-            padding: 20px;
-            min-height: 100vh;
-            margin: 0;
-            transition: background 0.3s;
+          background: linear-gradient(135deg, #121212 0%, #1a1a1a 100%);
+          color: #e0e0e0;
+          font-family: 'Inter', sans-serif;
+          text-align: center;
+          padding: 20px;
+          min-height: 100vh;
         }
-        .level-up-flash { background: #00ff9d !important; }
         h1, h2, h3 { font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
-        h1 { color: #00ff9d; text-shadow: 0 0 15px rgba(0, 255, 157, 0.4); margin-bottom: 30px; }
-       
+        h1 { color: #00ff9d; text-shadow: 0 0 15px rgba(0, 255, 157, 0.4); }
+        h2, h3 { color: #ffffff; }
         .container { max-width: 500px; margin: 0 auto; }
-       
+
+        /* 2. CARDS */
         .card {
-            background-color: #1e1e1e;
-            border-radius: 16px;
-            padding: 25px;
-            margin-bottom: 20px;
-            border: 1px solid #333;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+          background-color: #1e1e1e;
+          border-radius: 16px;
+          padding: 25px;
+          margin-bottom: 20px;
+          border: 1px solid #333;
+          box-shadow: 0 10px 20px rgba(0,0,0,0.4);
         }
-       
-        .highlight-card { border: 1px solid #00ff9d; }
-       
-        .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
-        .metric-label { font-size: 0.75rem; color: #888; text-transform: uppercase; }
-        .metric-value { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; color: #00ff9d; font-weight: 700; }
-       
-        .streak-active { color: #ff4757; text-shadow: 0 0 10px rgba(255, 71, 87, 0.5); }
-       
-        .progress-bar-bg { background: #333; height: 12px; border-radius: 6px; margin: 10px 0; overflow: hidden; }
-        .progress-bar-fill { height: 100%; width: 0%; transition: width 0.5s ease; background: #a29bfe; }
-       
-        .nav-bar { display: flex; gap: 8px; margin-bottom: 25px; justify-content: center; flex-wrap: wrap; }
-       
-        button {
-            padding: 12px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            background-color: #00ff9d;
-            color: #121212;
+        .highlight-card { border: 1px solid #00ff9d; box-shadow: 0 0 15px rgba(0, 255, 157, 0.1); }
+        .danger-box { border: 1px solid #ff4757; box-shadow: 0 0 10px rgba(255, 71, 87, 0.1); }
+
+
+        /* METRICS/ALERT STYLES */
+        .metrics-grid {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-top: 15px;
+        }
+        .metric-label {
+            font-size: 0.8rem;
+            color: #888;
+            margin-bottom: 5px;
+        }
+        .metric-value {
             font-family: 'Orbitron', sans-serif;
-            text-transform: uppercase;
-            font-size: 0.7rem;
-            transition: 0.2s;
+            font-size: 1.5rem;
+            color: #00ff9d;
+            font-weight: 700;
         }
-        button:hover { transform: scale(1.05); }
-        button:disabled { background: #444; color: #888; cursor: not-allowed; }
+        .alert-card {
+            background-color: rgba(255, 193, 7, 0.1);
+            border: 1px solid #ffc107;
+            padding: 15px;
+            box-shadow: 0 0 10px rgba(255, 193, 7, 0.2);
+        }
+        #alert-message {
+            color: #ffc107;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
 
-        .leaderboard-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.85rem; }
-        .leaderboard-table td { padding: 10px; text-align: left; border-bottom: 1px solid #333; }
-        .user-row { color: #00ff9d; font-weight: bold; background: rgba(0, 255, 157, 0.05); }
-       
-        .badge-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
-        .badge { background: #252525; padding: 10px; border-radius: 10px; opacity: 0.2; filter: grayscale(1); border: 1px solid #444; }
-        .unlocked { opacity: 1 !important; filter: grayscale(0) !important; border-color: #ffc107 !important; }
 
+        /* 3. INPUTS & BUTTONS */
+        .input-icon { position: relative; margin-bottom: 10px; }
+        .input-icon i { position: absolute; left: 15px; top: 12px; color: #888; }
+        input {
+          padding: 12px 12px 12px 40px;
+          border-radius: 8px; border: 1px solid #333;
+          background: #252525; color: white; width: 100%; box-sizing: border-box;
+          font-family: 'Inter', sans-serif;
+        }
+        input:focus { outline: none; border-color: #00ff9d; }
+
+        /* Input Group Layout for multiple items on one line (e.g., Log Time) */
+        .input-group {
+            display: flex;
+            gap: 10px; 
+            align-items: center;
+        }
+        .input-group input {
+            flex-grow: 1; 
+            /* Override input-icon padding for inputs used in groups */
+            padding: 12px; 
+        }
+
+
+        button {
+          padding: 12px 20px; border-radius: 8px; border: none;
+          cursor: pointer; font-weight: 600;
+          background-color: #00ff9d; color: #121212;
+          transition: 0.3s; font-family: 'Orbitron', sans-serif;
+          text-transform: uppercase; font-size: 0.8rem;
+        }
+        button:hover { background-color: #00cc7a; transform: scale(1.05); }
+
+        /* Danger Button Style */
+        .danger-btn { background-color: #ff4757; color: white; width: 100%; margin-top: 5px;}
+        .danger-btn:hover { background-color: #e84118; }
+
+        /* 4. UTILS */
         .hidden { display: none; }
-        input { padding: 12px; border-radius: 8px; border: 1px solid #333; background: #252525; color: white; width: 85%; margin-bottom: 12px; outline: none; }
-        input:focus { border-color: #00ff9d; }
+        .link { color: #00ff9d; cursor: pointer; text-decoration: none; font-weight: bold; }
+        .small-text { font-size: 0.85rem; color: #888; margin-top: 10px; }
+
+        /* 5. PROGRESS BAR */
+        .progress-bar-bg {
+          background: #333; height: 12px;
+          border-radius: 6px; margin: 15px 0; overflow: hidden;
+        }
+        .progress-bar-fill {
+          height: 100%; width: 0%; background: #00ff9d;
+          transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* 6. NAV & CALENDAR */
+        .nav-bar { display: flex; gap: 10px; margin-bottom: 25px; justify-content: center; }
+        .nav-bar button { flex: 1; font-size: 0.7rem; padding: 10px 5px; }
+
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-top: 15px; }
+        .header-row div { font-weight: bold; color: #00ff9d; font-size: 0.8em; text-transform: uppercase; }
+        .day-box {
+          background: #252525; aspect-ratio: 1; display: flex;
+          align-items: center; justify-content: center;
+          border-radius: 6px; font-size: 0.9em; font-weight: bold;
+        }
+        .day-balanced { border: 2px solid #00ff9d; color: #00ff9d; }
+        .day-over { border: 2px solid #ff4757; color: #ff4757; }
+        .legend { margin-top: 15px; font-size: 0.8em; display: flex; justify-content: center; gap: 15px; }
+        .dot { width: 10px; height: 10px; display: inline-block; border-radius: 50%; margin-right: 5px; }
+        .green { background: #00ff9d; } .red { background: #ff4757; }
+
+        /* 7. TABLE & DELETE BTN */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        td { padding: 10px; border-bottom: 1px solid #333; text-align: left; font-size: 0.9rem; }
+        .delete-btn { background: transparent; color: #ff4757; padding: 5px; margin: 0; float: right; }
+
+        /* 8. MISSION STATUS COLORS */
+        .mission-good { border: 1px solid #00ff9d; background: rgba(0, 255, 157, 0.05); }
+        .mission-warn { border: 1px solid #ff4757; background: rgba(255, 71, 87, 0.05); }
+        #mission-status-msg { font-size: 1.1em; line-height: 1.5; }
     </style>
 </head>
 <body>
 
-<audio id="lvl-snd" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3" preload="auto"></audio>
-
 <div class="container">
-    <h1>LEVEL UP</h1>
+  <header>
+    <h1><i class="fa-solid fa-gamepad"></i> Level Up Your Day</h1>
+    <p>Track stats. Build habits. Own your day.</p>
+  </header>
 
-    <section id="auth-section">
-        <div class="card">
-            <h3>Character Creation</h3>
-            <input type="text" id="username" placeholder="Character Name">
-            <input type="email" id="email" placeholder="Email Address">
-            <input type="password" id="pass" placeholder="Password">
-            <button onclick="login()" style="width:90%">Enter World</button>
-        </div>
-    </section>
-
-    <div id="app-content" class="hidden">
-        <nav class="nav-bar">
-            <button onclick="show('dash')"><i class="fa-solid fa-gauge"></i> Dash</button>
-            <button onclick="show('quest')"><i class="fa-solid fa-scroll"></i> Quest</button>
-            <button onclick="show('trophy')"><i class="fa-solid fa-ranking-star"></i> Stats</button>
-            <button onclick="location.reload()" style="background:#ff4757; color:white;">Exit</button>
-        </nav>
-
-        <div id="dash-section">
-            <div class="card">
-                <div class="metrics-grid">
-                    <div><p class="metric-label">Level</p><p class="metric-value" id="ui-lvl">1</p></div>
-                    <div><p class="metric-label">Streak</p><p class="metric-value streak-active" id="ui-streak"><i class="fa-solid fa-fire"></i> 0</p></div>
-                </div>
-                <div class="progress-bar-bg"><div id="xp-bar" class="progress-bar-fill"></div></div>
-                <p style="font-size: 0.75rem; color: #888;">XP: <span id="ui-xp">0</span> / 500</p>
-            </div>
-           
-            <div class="card highlight-card">
-                <h3>Log Action</h3>
-                <input type="number" id="mins" placeholder="Minutes active">
-                <button onclick="alert('Action recorded in history!')">Save Data</button>
-            </div>
-        </div>
-
-        <div id="quest-section" class="hidden">
-            <div class="card highlight-card">
-                <h3 id="q-task" style="text-align:left; color:#00ff9d;"></h3>
-                <p id="q-tip" style="text-align:left; font-size:0.9rem; border-left:3px solid #ffc107; padding-left:10px;"></p>
-                <button id="q-btn" onclick="done()" style="width:100%; background:#ffc107; margin-top:10px; color:#121212;">Claim +50 XP</button>
-            </div>
-        </div>
-
-        <div id="trophy-section" class="hidden">
-            <div class="card">
-                <h3>Leaderboard</h3>
-                <table class="leaderboard-table" id="leaderboard-body"></table>
-            </div>
-            <div class="card">
-                <h3>Trophies</h3>
-                <div class="badge-grid" id="badge-box"></div>
-            </div>
-        </div>
+  <section id="auth-section">
+    <div id="login-form" class="card">
+      <h2><i class="fa-solid fa-user-astronaut"></i> Player Login</h2>
+      
+      <div class="input-icon">
+        <i class="fa-solid fa-envelope"></i>
+        <input type="email" id="login-email" placeholder="Email Address">
+      </div>
+      <div class="input-icon">
+        <i class="fa-solid fa-lock"></i>
+        <input type="password" id="login-password" placeholder="Password">
+      </div>
+      <button onclick="loginUser()">Log In</button>
+      <p class="small-text">New player? <span class="link" onclick="showRegister()">Create Account</span></p>
     </div>
+
+    <div id="register-form" class="card hidden">
+      <h2><i class="fa-solid fa-user-plus"></i> Create Account</h2>
+
+      <div class="input-icon">
+        <i class="fa-solid fa-envelope"></i>
+        <input type="email" id="reg-email" placeholder="Email Address">
+      </div>
+
+      <div class="input-icon">
+        <i class="fa-solid fa-user"></i>
+        <input type="text" id="reg-username" placeholder="Choose Display Name">
+      </div>
+
+      <div class="input-icon">
+        <i class="fa-solid fa-lock"></i>
+        <input type="password" id="reg-password" placeholder="Choose Password">
+      </div>
+
+      <button onclick="registerUser()">Sign Up</button>
+      <p class="small-text">Have an account? <span class="link" onclick="showLogin()">Log In</span></p>
+    </div>
+  </section>
+
+  <div id="app-content" class="hidden">
+    
+    <div class="nav-bar">
+      <button onclick="showSection('dashboard')"><i class="fa-solid fa-chart-line"></i> Dash</button>
+      <button onclick="showSection('calendar')"><i class="fa-solid fa-calendar-days"></i> Cal</button>
+      <button onclick="showSection('mission')"><i class="fa-solid fa-rocket"></i> Mission</button>
+      <button onclick="showSection('settings')"><i class="fa-solid fa-gear"></i></button>
+      <button onclick="logout()" style="background:#ff4757"><i class="fa-solid fa-power-off"></i></button>
+    </div>
+
+    <div id="dashboard-section">
+      <div class="welcome-banner">
+        <h2 id="welcome-msg">Welcome.</h2>
+      </div>
+
+      <div class="card metrics-card">
+          <h3><i class="fa-solid fa-star"></i> Performance Stats</h3>
+          <div class="metrics-grid">
+              <div>
+                  <p class="metric-label">7-Day Avg:</p>
+                  <p class="metric-value" id="avg-minutes">0 min</p>
+              </div>
+              <div>
+                  <p class="metric-label">Goal Streak:</p>
+                  <p class="metric-value" id="goal-streak">0 days</p>
+              </div>
+          </div>
+      </div>
+      
+      <div id="status-alert" class="card alert-card hidden">
+          <p id="alert-message"><i class="fa-solid fa-bell"></i> Warning: Nearing limit!</p>
+      </div>
+
+      <div class="card">
+        <h3><i class="fa-solid fa-bullseye"></i> Set Daily Limit</h3>
+        <div class="input-group">
+          <input type="number" id="goal-input" placeholder="Minutes (e.g. 120)">
+          <button class="action-btn" onclick="setGoal()">Update</button>
+        </div>
+        <p>Current Goal: <span id="display-goal">120</span> min</p>
+      </div>
+
+      <div class="card highlight-card">
+        <h3><i class="fa-solid fa-clock"></i> Log Playtime</h3>
+        <div class="input-group">
+          <input type="number" id="log-input" placeholder="Minutes played">
+          <button class="action-btn" onclick="logTime()">Log</button>
+        </div>
+      </div>
+
+      <div id="feedback-box" class="card hidden">
+        <h3 id="feedback-status">Status: Analyzing...</h3>
+        <div class="progress-bar-bg">
+          <div id="progress-bar" class="progress-bar-fill"></div>
+        </div>
+        <p id="feedback-tips" class="tip-text"></p>
+      </div>
+      
+      <div class="card">
+        <h3>History</h3>
+        <table id="history-table">
+          <tbody id="history-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="calendar-section" class="hidden">
+      <div class="card">
+        <h3 id="calendar-month-name">Month View</h3>
+        <div class="calendar-grid header-row">
+          <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
+        </div>
+        <div id="calendar-days" class="calendar-grid"></div>
+        <div class="legend">
+          <span class="dot green"></span> Balanced
+          <span class="dot red"></span> Over Limit
+        </div>
+      </div>
+    </div>
+
+    <div id="mission-section" class="hidden">
+      <div class="card highlight-card" id="mission-status-card">
+        <h2 id="mission-status-title">Status Report</h2>
+        <p id="mission-status-msg">Loading data...</p>
+      </div>
+
+      <div class="card">
+        <h3><i class="fa-solid fa-lightbulb"></i> Gaming Fact of the Day</h3>
+        <p id="daily-fact-text" style="color: #00ff9d; font-style: italic;">Loading fact...</p>
+      </div>
+
+      <div class="card">
+        <h2>Mission: Level Up <i class="fa-solid fa-rocket"></i></h2>
+        <div style="text-align: left; margin-top: 20px;">
+          <h3 style="color:#00ff9d; margin-top:15px"><i class="fa-solid fa-lock"></i> Privacy Promise</h3>
+          <p class="small-text" style="color:#ccc">
+            No servers. No spying. No accounts in the cloud. Your data is encrypted and stored locally on this device only.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div id="settings-section" class="hidden">
+      
+      <div class="card">
+        <h3><i class="fa-solid fa-user-gear"></i> Edit Profile</h3>
+        <p class="small-text">Update your display name.</p>
+        <div class="input-icon">
+          <i class="fa-solid fa-user"></i>
+          <input type="text" id="settings-username" placeholder="New Display Name">
+        </div>
+        <button onclick="updateProfile()">Save Changes</button>
+      </div>
+
+      <div class="card danger-box">
+        <h3 style="color:#ff4757"><i class="fa-solid fa-triangle-exclamation"></i> Danger Zone</h3>
+        
+        <p class="small-text">Clear all history logs but keep your account.</p>
+        <button class="danger-btn" onclick="clearHistory()">Clear History</button>
+        
+        <hr style="border-color: #444; margin: 20px 0;">
+
+        <p class="small-text">Permanently delete your account and all data.</p>
+        <button class="danger-btn" onclick="deleteAccount()">Delete Account</button>
+      </div>
+
+    </div>
+
+  </div>
 </div>
 
 <script>
-// --- CORE DATA ---
-let user = { username: "PlayerOne", xp: 0, done: 0, streak: 0, lastDate: "", ach: [] };
-let emailKey = "";
+// GLOBAL VARIABLES
+let currentEmail = "";
+let userData = { username: "", password: "", goal: 120, history: [] };
 
-const challenges = [
-    "Do 10 pushups", "Drink a large glass of water", "Stretch for 2 mins", "Clean your desk space",
-    "15 squats", "20 jumping jacks", "Wipe your monitor/screen", "10 deep breaths",
-    "Walk for 5 minutes", "Touch your toes for 30s", "Hold a plank for 30s", "Organize 5 phone apps",
-    "Rest your eyes for 1 min", "Walk up/down stairs", "Eat a piece of fruit"
+// --- DATA ARRAYS ---
+const gameFacts = [
+  "Surgeons who play video games for 3+ hours a week make 37% fewer errors.",
+  "Studies show playing 3D platformers can increase grey matter in the brain's hippocampus.",
+  "The best selling console of all time is the PlayStation 2.",
+  "Gamers often have faster reaction times than non-gamers.",
+  "Action video games can improve your ability to track multiple objects at once.",
+  "Moderate gaming is linked to better stress management skills.",
+  "Esports is now a varsity sport at over 150 US colleges."
 ];
-
-const tips = [
-    "Blink every 20 seconds", "Adjust your chair height", "Take a 5-min movement break",
-    "Stay hydrated with water", "Keep monitor at eye level", "Rest your eyes from blue light",
-    "Keep your feet flat on the floor", "Avoid sugary snacks for energy"
+const balancedCompliments = [
+  "You have Level 100 discipline today! 🛡️",
+  "Perfect balance. You are owning your day.",
+  "Great job keeping your streak alive!",
+  "Mission Accomplished: You stayed within your limits.",
+  "Pro Move: Knowing when to stop is a skill."
 ];
-
-const npcs = [
-    { u: "ShadowNinja", x: 2850 },
-    { u: "PixelHero", x: 1950 },
-    { u: "QuestMaster", x: 1200 },
-    { u: "HabitRunner", x: 450 }
+const overLimitTips = [
+  "Side Quest: Go drink a glass of water right now. 💧",
+  "Side Quest: Look out a window for 2 minutes to reset your eyes. 👀",
+  "Challenge: Do 10 pushups or jumping jacks to reset your body. 🏃",
+  "Tip: Blue light affects sleep. Try reading a paper book tonight.",
+  "Time for a tactical retreat. Log off and recharge."
 ];
 
 // --- NAVIGATION ---
-function show(id) {
-    ['dash','quest','trophy'].forEach(s => document.getElementById(s+'-section').classList.add('hidden'));
-    document.getElementById(id+'-section').classList.remove('hidden');
-    if(id === 'quest') rollQuest();
-    if(id === 'trophy') { renderLeaderboard(); renderAch(); }
+function showSection(sectionId) {
+  document.getElementById("dashboard-section").classList.add("hidden");
+  document.getElementById("calendar-section").classList.add("hidden");
+  document.getElementById("mission-section").classList.add("hidden");
+  document.getElementById("settings-section").classList.add("hidden");
+  
+  document.getElementById(sectionId + "-section").classList.remove("hidden");
+  
+  if(sectionId === 'calendar') renderCalendar();
+  if(sectionId === 'mission') renderMission(); 
+  
+  if(sectionId === 'settings') {
+    document.getElementById("settings-username").value = userData.username;
+  }
 }
 
-// --- AUTH & LOAD ---
-function login() {
-    const emailInput = document.getElementById('email').value;
-    const nameInput = document.getElementById('username').value;
-    if(!emailInput) return alert("Please enter an email");
-   
-    emailKey = "u_" + emailInput;
-    let saved = localStorage.getItem(emailKey);
-   
-    if(saved) {
-        user = JSON.parse(saved);
-    } else {
-        user.username = nameInput || "PlayerOne";
-    }
+// --- CORE APP LOAD/SAVE FUNCTIONS ---
 
-    // Protection against broken data
-    user.xp = Number(user.xp) || 0;
-    user.done = Number(user.done) || 0;
-    user.streak = Number(user.streak) || 0;
-    user.ach = user.ach || [];
+function loadUserData(email) {
+  const savedData = localStorage.getItem("user_" + email);
+  if (!savedData) return false;
 
-    updateStreak();
-    document.getElementById('auth-section').classList.add('hidden');
-    document.getElementById('app-content').classList.remove('hidden');
-    updateUI();
+  currentEmail = email; 
+  userData = JSON.parse(savedData);
+  document.getElementById("auth-section").classList.add("hidden");
+  document.getElementById("app-content").classList.remove("hidden");
+  
+  document.getElementById("welcome-msg").innerText = "Welcome, " + userData.username;
+  refreshUI();
+  return true;
 }
 
-function updateStreak() {
-    const today = new Date().toLocaleDateString();
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const yesterdayStr = yesterday.toLocaleDateString();
-
-    if (user.lastDate !== yesterdayStr && user.lastDate !== today) {
-        user.streak = 0; // Reset if they missed a day
-    }
+function initApp() {
+  const lastUser = localStorage.getItem("lastLoggedInUser");
+  if (lastUser) {
+    // Attempt auto-login with the last user's saved email
+    loadUserData(lastUser);
+  }
+  // If no user found, the login screen remains visible by default
 }
 
-// --- QUEST LOGIC ---
-function rollQuest() {
-    document.getElementById('q-task').innerText = "Mission: " + challenges[Math.floor(Math.random()*challenges.length)];
-    document.getElementById('q-tip').innerText = "Pro Tip: " + tips[Math.floor(Math.random()*tips.length)];
-    const btn = document.getElementById('q-btn');
-    btn.disabled = false;
-    btn.innerText = "Claim +50 XP";
-    btn.style.background = "#ffc107";
+function saveData() {
+  localStorage.setItem("user_" + currentEmail, JSON.stringify(userData));
 }
 
-function done() {
-    const today = new Date().toLocaleDateString();
-    let oldL = Math.floor(user.xp / 500) + 1;
-   
-    // Gain XP
-    user.xp += 50;
-    user.done += 1;
+// --- AUTHENTICATION ---
+function showRegister() {
+  document.getElementById("login-form").classList.add("hidden");
+  document.getElementById("register-form").classList.remove("hidden");
+}
+function showLogin() {
+  document.getElementById("register-form").classList.add("hidden");
+  document.getElementById("login-form").classList.remove("hidden");
+}
 
-    // Handle Streak
-    if (user.lastDate !== today) {
-        user.streak += 1;
-        user.lastDate = today;
-        if (user.streak % 3 === 0) {
-            user.xp += 100;
-            alert("🔥 3-DAY STREAK! +100 XP BONUS!");
+function registerUser() {
+  const email = document.getElementById("reg-email").value.trim();
+  const user = document.getElementById("reg-username").value.trim();
+  const pass = document.getElementById("reg-password").value.trim();
+
+  if (!email || !user || !pass) return alert("Please fill in all fields.");
+  if (!email.includes("@")) return alert("Please enter a valid email address.");
+  if (localStorage.getItem("user_" + email)) return alert("Email already registered.");
+
+  const newUserData = { username: user, password: pass, goal: 120, history: [] };
+  localStorage.setItem("user_" + email, JSON.stringify(newUserData));
+  alert("Account created! Please Log In.");
+  showLogin();
+}
+
+function loginUser() {
+  const email = document.getElementById("login-email").value.trim();
+  const pass = document.getElementById("login-password").value.trim();
+  
+  const savedData = localStorage.getItem("user_" + email);
+  if (!savedData) return alert("Account not found.");
+  
+  const parsedData = JSON.parse(savedData);
+  if (pass === parsedData.password) {
+    // Store email for auto-login on next load
+    localStorage.setItem("lastLoggedInUser", email); 
+    loadUserData(email);
+  } else {
+    alert("Incorrect password!");
+  }
+}
+
+function logout() { 
+  // Clear the auto-login email
+  localStorage.removeItem("lastLoggedInUser");
+  location.reload(); 
+}
+
+// --- SETTINGS FUNCTIONS ---
+function updateProfile() {
+  const newName = document.getElementById("settings-username").value.trim();
+  if(newName) {
+    userData.username = newName;
+    saveData();
+    document.getElementById("welcome-msg").innerText = "Welcome, " + userData.username;
+    alert("Profile Updated!");
+  }
+}
+
+function clearHistory() {
+  if(confirm("Are you sure? This will delete all your play logs.")) {
+    userData.history = [];
+    saveData();
+    refreshUI();
+    alert("History Cleared.");
+  }
+}
+
+function deleteAccount() {
+  const confirmDelete = confirm("WARNING: This will delete your account forever. Are you sure?");
+  if(confirmDelete) {
+    localStorage.removeItem("user_" + currentEmail);
+    localStorage.removeItem("lastLoggedInUser"); // Also clear auto-login
+    alert("Account Deleted.");
+    location.reload();
+  }
+}
+
+// --- APP LOGIC ---
+function setGoal() {
+  const goalVal = document.getElementById("goal-input").value;
+  if(goalVal) {
+    userData.goal = parseInt(goalVal); 
+    saveData(); refreshUI(); alert("Goal updated!");
+  }
+}
+
+function logTime() {
+  const mins = document.getElementById("log-input").value;
+  if (mins) {
+    const today = new Date();
+    const dateString = today.toLocaleDateString(); 
+    userData.history.push({ date: dateString, minutes: parseInt(mins) });
+    saveData();
+    refreshUI();
+    document.getElementById("log-input").value = ""; 
+  }
+}
+
+function deleteEntry(index) {
+  const realIndex = userData.history.length - 1 - index;
+  if(confirm("Delete this entry?")) {
+    userData.history.splice(realIndex, 1); 
+    saveData();
+    refreshUI();
+  }
+}
+
+function refreshUI() {
+  document.getElementById("display-goal").innerText = userData.goal;
+  
+  const tableBody = document.getElementById("history-body");
+  tableBody.innerHTML = ""; 
+  
+  const recentHistory = userData.history.slice().reverse().slice(0, 5);
+  recentHistory.forEach((entry, index) => {
+    const row = `
+      <tr>
+        <td><i class="fa-regular fa-calendar" style="color:#888; margin-right:5px;"></i> ${entry.date}</td>
+        <td><b>${entry.minutes}</b> min
+          <button class="delete-btn" onclick="deleteEntry(${index})"><i class="fa-solid fa-trash"></i></button>
+        </td>
+      </tr>`;
+    tableBody.innerHTML += row;
+  });
+
+  updateMetrics(); 
+  checkGoalAlert(); 
+  updateFeedback();
+}
+
+// --- MISSION LOGIC ---
+function renderMission() {
+  const date = new Date();
+  const dayIndex = date.getDate(); 
+  // Select fact based on day of month (ensures a different fact daily)
+  const factIndex = dayIndex % gameFacts.length; 
+  document.getElementById("daily-fact-text").innerText = '"' + gameFacts[factIndex] + '"';
+
+  const historyMap = getHistoryMap();
+  const todayStr = new Date().toLocaleDateString();
+  const totalToday = historyMap[todayStr] || 0;
+
+  const card = document.getElementById("mission-status-card");
+  const title = document.getElementById("mission-status-title");
+  const msg = document.getElementById("mission-status-msg");
+  const randomGood = balancedCompliments[Math.floor(Math.random() * balancedCompliments.length)];
+  const randomBad = overLimitTips[Math.floor(Math.random() * overLimitTips.length)];
+  const currentGoal = userData.goal;
+
+  if (totalToday === 0) {
+    card.className = "card";
+    title.innerHTML = '<i class="fa-solid fa-hourglass-start"></i> Ready to Start?';
+    title.style.color = "white";
+    msg.innerText = "No time logged yet. Let's aim to stay within your " + currentGoal + " min limit!";
+  } else if (totalToday <= currentGoal) {
+    card.className = "card mission-good";
+    title.innerHTML = '<i class="fa-solid fa-shield-halved"></i> Status: Balanced';
+    title.style.color = "#00ff9d";
+    msg.innerText = randomGood;
+  } else {
+    card.className = "card mission-warn";
+    title.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Status: Over Limit';
+    title.style.color = "#ff4757";
+    msg.innerText = randomBad;
+  }
+}
+
+
+// --- METRICS & ALERTS FUNCTIONS ---
+
+function updateMetrics() {
+    const historyMap = getHistoryMap();
+    
+    // 1. Calculate Average Playtime (7 days)
+    let totalMinutes = 0;
+    let daysCount = 0;
+    const today = new Date();
+
+    for (let i = 0; i < 7; i++) {
+        const date = new Date(today);
+        date.setDate(today.getDate() - i);
+        const dateStr = date.toLocaleDateString();
+        
+        if (historyMap[dateStr] !== undefined) {
+            totalMinutes += historyMap[dateStr];
+            daysCount++;
         }
     }
-
-    let newL = Math.floor(user.xp / 500) + 1;
-   
-    // Level Up Effects
-    if(newL > oldL) {
-        document.getElementById('lvl-snd').play();
-        document.body.classList.add('level-up-flash');
-        setTimeout(()=> document.body.classList.remove('level-up-flash'), 200);
-        alert("✨ LEVEL UP! You reached Level " + newL + " ✨");
+    const avg = daysCount > 0 ? Math.round(totalMinutes / daysCount) : 0;
+    document.getElementById("avg-minutes").innerText = `${avg} min`;
+    
+    // 2. Calculate Streak
+    let streak = 0;
+    const currentGoal = userData.goal;
+    
+    // Start checking from yesterday backwards
+    for (let i = 1; i <= 365; i++) {
+        const date = new Date(today);
+        date.setDate(today.getDate() - i);
+        const dateStr = date.toLocaleDateString();
+        
+        const minutes = historyMap[dateStr] || 0;
+        
+        if (minutes > 0 && minutes <= currentGoal) {
+            // Success: Logged time AND was under goal
+            streak++;
+        } else if (minutes === 0) {
+            // Break: No activity was logged for this day. 
+            break; 
+        } else {
+            // Break: Logged time AND was over goal
+            break;
+        }
     }
-   
-    checkAch();
-    save();
-    updateUI();
-   
-    const btn = document.getElementById('q-btn');
-    btn.disabled = true;
-    btn.innerText = "Mission Complete!";
-    btn.style.background = "#444";
+    document.getElementById("goal-streak").innerText = `${streak} days`;
 }
 
-// --- UI UPDATES ---
-function updateUI() {
-    const currentXP = Number(user.xp) || 0;
-    document.getElementById('ui-xp').innerText = currentXP;
-    document.getElementById('ui-lvl').innerText = Math.floor(currentXP / 500) + 1;
-    document.getElementById('ui-streak').innerHTML = `<i class="fa-solid fa-fire"></i> ${user.streak}`;
-    document.getElementById('xp-bar').style.width = (currentXP % 500 / 500 * 100) + "%";
-}
-
-function renderLeaderboard() {
-    const table = document.getElementById('leaderboard-body');
-    let all = [...npcs, {u:user.username, x:user.xp}].sort((a,b)=>b.x-a.x);
-    table.innerHTML = `<tr><td>Rank</td><td>Player</td><td>XP</td></tr>`;
-    all.forEach((p, i) => {
-        const isMe = (p.u === user.username);
-        table.innerHTML += `<tr class="${isMe?'user-row':''}"><td>#${i+1}</td><td>${p.u}</td><td>${p.x}</td></tr>`;
+function getHistoryMap() {
+    const map = {};
+    userData.history.forEach(entry => {
+        if (map[entry.date]) {
+            map[entry.date] += entry.minutes;
+        } else {
+            map[entry.date] = entry.minutes;
+        }
     });
+    return map;
 }
 
-function checkAch() {
-    if(user.done >= 1 && !user.ach.includes('a1')) user.ach.push('a1');
-    if(user.xp >= 1000 && !user.ach.includes('a2')) user.ach.push('a2');
-    if(user.streak >= 3 && !user.ach.includes('a3')) user.ach.push('a3');
+function checkGoalAlert() {
+    const todayStr = new Date().toLocaleDateString();
+    let totalToday = 0;
+    userData.history.forEach(entry => {
+        if(entry.date === todayStr) totalToday += entry.minutes;
+    });
+
+    const percent = (totalToday / userData.goal);
+    const alertBox = document.getElementById("status-alert");
+    
+    if (percent >= 0.90 && percent < 1.00) {
+        // Nearing limit (90% to 99.9%)
+        document.getElementById("alert-message").innerHTML = `<i class="fa-solid fa-bell"></i> Caution: You are at ${Math.floor(percent * 100)}% of your daily limit!`;
+        alertBox.classList.remove("hidden");
+    } else {
+        alertBox.classList.add("hidden");
+    }
 }
 
-function renderAch() {
-    const box = document.getElementById('badge-box');
-    const list = [
-        {id:'a1', n:'First Step', i:'fa-shoe-prints'},
-        {id:'a2', n:'Veteran', i:'fa-medal'},
-        {id:'a3', n:'On Fire', i:'fa-fire-burner'}
-    ];
-    box.innerHTML = list.map(a => `
-        <div class="badge ${user.ach.includes(a.id)?'unlocked':''}">
-            <i class="fa-solid ${a.i}" style="font-size:1.5rem; color:#ffc107"></i><br>
-            <span style="font-size:0.65rem; font-weight:bold;">${a.n}</span>
-        </div>
-    `).join('');
+
+// --- EXISTING FEEDBACK FUNCTION ---
+function updateFeedback() {
+  const todayStr = new Date().toLocaleDateString();
+  let totalToday = 0;
+  userData.history.forEach(entry => {
+    if(entry.date === todayStr) totalToday += entry.minutes;
+  });
+
+  const box = document.getElementById("feedback-box");
+  box.classList.remove("hidden");
+  
+  let percent = (totalToday / userData.goal) * 100;
+  if (percent > 100) percent = 100;
+  
+  const bar = document.getElementById("progress-bar");
+  bar.style.width = percent + "%";
+  
+  const status = document.getElementById("feedback-status");
+  const tip = document.getElementById("feedback-tips");
+  
+  if (totalToday === 0) {
+    status.innerHTML = '<i class="fa-solid fa-gamepad"></i> Ready to Play'; 
+    status.style.color="white"; bar.style.background="#333";
+    tip.innerText = "Log time when ready.";
+  } else if (totalToday <= userData.goal) {
+    status.innerHTML = '<i class="fa-solid fa-check-circle"></i> Balanced'; 
+    status.style.color="#00ff9d"; bar.style.background="#00ff9d";
+    tip.innerText = "Good job keeping balance.";
+  } else {
+    status.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Over Limit'; 
+    status.style.color="#ff4757"; bar.style.background="#ff4757";
+    tip.innerText = "Time to take a break.";
+  }
 }
 
-function save() { localStorage.setItem(emailKey, JSON.stringify(user)); }
+// --- CALENDAR GENERATOR ---
+function renderCalendar() {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = date.getMonth(); 
+  
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  document.getElementById("calendar-month-name").innerText = monthNames[month] + " " + year;
+
+  const daysContainer = document.getElementById("calendar-days");
+  daysContainer.innerHTML = "";
+
+  const firstDayIndex = new Date(year, month, 1).getDay();
+  const lastDay = new Date(year, month + 1, 0).getDate();
+  
+  // Get history map for quick lookup
+  const historyMap = getHistoryMap();
+  const currentGoal = userData.goal;
+
+  for (let x = 0; x < firstDayIndex; x++) { daysContainer.innerHTML += `<div></div>`; }
+
+  for (let i = 1; i <= lastDay; i++) {
+    // Construct the date string for the current calendar day
+    let checkDate = new Date(year, month, i);
+    let checkDateStr = checkDate.toLocaleDateString(); 
+    
+    // Get total minutes logged for this specific day
+    let totalMinutes = historyMap[checkDateStr] || 0;
+
+    let className = "day-box";
+    if (totalMinutes > 0) {
+      if (totalMinutes <= currentGoal) {
+        className += " day-balanced";
+      } else {
+        className += " day-over";
+      }
+    }
+    
+    daysContainer.innerHTML += `<div class="${className}">${i}</div>`;
+  }
+}
+
+// Start the application process when the script loads
+document.addEventListener('DOMContentLoaded', initApp);
 </script>
+
 </body>
 </html>
+
