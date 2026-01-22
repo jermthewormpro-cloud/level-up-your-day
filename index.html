@@ -3,162 +3,300 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Level Up Master - Complete Edition</title>
+    <title>Level Up Master - Ultimate Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="https://img.icons8.com/fluency/96/000000/game-controller.png">
+    <link rel="apple-touch-icon" href="https://img.icons8.com/fluency/96/000000/game-controller.png">
    
     <style>
-        body { background: linear-gradient(135deg, #121212 0%, #1a1a1a 100%); color: #e0e0e0; font-family: 'Inter', sans-serif; text-align: center; padding: 20px; min-height: 100vh; margin: 0; transition: background 0.3s; }
+        body {
+            background: linear-gradient(135deg, #121212 0%, #1a1a1a 100%);
+            color: #e0e0e0;
+            font-family: 'Inter', sans-serif;
+            text-align: center;
+            padding: 20px;
+            min-height: 100vh;
+            margin: 0;
+            transition: background 0.3s;
+        }
         .level-up-flash { background: #00ff9d !important; }
         h1, h2, h3 { font-family: 'Orbitron', sans-serif; letter-spacing: 1px; }
-        h1 { color: #00ff9d; text-shadow: 0 0 15px rgba(0, 255, 157, 0.4); }
+        h1 { color: #00ff9d; text-shadow: 0 0 15px rgba(0, 255, 157, 0.4); margin-bottom: 30px; }
+       
         .container { max-width: 500px; margin: 0 auto; }
-        .card { background-color: #1e1e1e; border-radius: 16px; padding: 25px; margin-bottom: 20px; border: 1px solid #333; box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
+       
+        .card {
+            background-color: #1e1e1e;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid #333;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+        }
+       
         .highlight-card { border: 1px solid #00ff9d; }
+       
         .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
         .metric-label { font-size: 0.75rem; color: #888; text-transform: uppercase; }
         .metric-value { font-family: 'Orbitron', sans-serif; font-size: 1.2rem; color: #00ff9d; font-weight: 700; }
-        .progress-bar-bg { background: #333; height: 10px; border-radius: 5px; margin: 10px 0; overflow: hidden; }
+       
+        .streak-active { color: #ff4757; text-shadow: 0 0 10px rgba(255, 71, 87, 0.5); }
+       
+        .progress-bar-bg { background: #333; height: 12px; border-radius: 6px; margin: 10px 0; overflow: hidden; }
         .progress-bar-fill { height: 100%; width: 0%; transition: width 0.5s ease; background: #a29bfe; }
-        .nav-bar { display: flex; gap: 8px; margin-bottom: 25px; justify-content: center; }
-        button { padding: 12px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; background-color: #00ff9d; color: #121212; font-family: 'Orbitron', sans-serif; text-transform: uppercase; font-size: 0.7rem; }
+       
+        .nav-bar { display: flex; gap: 8px; margin-bottom: 25px; justify-content: center; flex-wrap: wrap; }
+       
+        button {
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            background-color: #00ff9d;
+            color: #121212;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            transition: 0.2s;
+        }
+        button:hover { transform: scale(1.05); }
+        button:disabled { background: #444; color: #888; cursor: not-allowed; }
+
+        .leaderboard-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.85rem; }
+        .leaderboard-table td { padding: 10px; text-align: left; border-bottom: 1px solid #333; }
+        .user-row { color: #00ff9d; font-weight: bold; background: rgba(0, 255, 157, 0.05); }
+       
         .badge-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
-        .badge { background: #252525; padding: 10px; border-radius: 10px; opacity: 0.3; filter: grayscale(1); border: 1px solid #444; }
-        .unlocked { opacity: 1; filter: grayscale(0); border-color: #ffc107; }
+        .badge { background: #252525; padding: 10px; border-radius: 10px; opacity: 0.2; filter: grayscale(1); border: 1px solid #444; }
+        .unlocked { opacity: 1 !important; filter: grayscale(0) !important; border-color: #ffc107 !important; }
+
         .hidden { display: none; }
+        input { padding: 12px; border-radius: 8px; border: 1px solid #333; background: #252525; color: white; width: 85%; margin-bottom: 12px; outline: none; }
+        input:focus { border-color: #00ff9d; }
     </style>
 </head>
 <body>
 
-<audio id="lvl-snd" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3"></audio>
+<audio id="lvl-snd" src="https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3" preload="auto"></audio>
 
 <div class="container">
-  <h1>LEVEL UP</h1>
+    <h1>LEVEL UP</h1>
 
-  <section id="auth-section">
-    <div class="card">
-      <input type="email" id="email" placeholder="Email" style="width:90%; padding:10px; margin-bottom:10px; background:#252525; color:white; border:1px solid #333;"><br>
-      <input type="password" id="pass" placeholder="Password" style="width:90%; padding:10px; margin-bottom:10px; background:#252525; color:white; border:1px solid #333;"><br>
-      <button onclick="login()" style="width:95%">Login / Register</button>
-    </div>
-  </section>
-
-  <div id="app-content" class="hidden">
-    <nav class="nav-bar">
-      <button onclick="show('dash')">Dash</button>
-      <button onclick="show('quest')">Quest</button>
-      <button onclick="show('trophy')">Stats</button>
-      <button onclick="location.reload()" style="background:#ff4757">Exit</button>
-    </nav>
-
-    <div id="dash-section">
-      <div class="card">
-        <div class="metrics-grid">
-          <div><p class="metric-label">Level</p><p class="metric-value" id="ui-lvl">1</p></div>
-          <div><p class="metric-label">XP</p><p class="metric-value" id="ui-xp">0</p></div>
+    <section id="auth-section">
+        <div class="card">
+            <h3>Character Creation</h3>
+            <input type="text" id="username" placeholder="Character Name">
+            <input type="email" id="email" placeholder="Email Address">
+            <input type="password" id="pass" placeholder="Password">
+            <button onclick="login()" style="width:90%">Enter World</button>
         </div>
-        <div class="progress-bar-bg"><div id="xp-bar" class="progress-bar-fill"></div></div>
-      </div>
-      <div class="card highlight-card">
-        <h3>Log Playtime</h3>
-        <input type="number" id="mins" placeholder="Minutes" style="width:70%; padding:10px; background:#252525; color:white; border:1px solid #333;">
-        <button onclick="logT()">Log</button>
-      </div>
-    </div>
+    </section>
 
-    <div id="quest-section" class="hidden">
-      <div class="card highlight-card">
-        <h3 id="q-task" style="text-align:left; color:#00ff9d;"></h3>
-        <p id="q-tip" style="text-align:left; font-size:0.9rem; border-left:3px solid #ffc107; padding-left:10px;"></p>
-        <button id="q-btn" onclick="done()" style="width:100%; background:#ffc107;">Finish Quest (+50 XP)</button>
-      </div>
-    </div>
+    <div id="app-content" class="hidden">
+        <nav class="nav-bar">
+            <button onclick="show('dash')"><i class="fa-solid fa-gauge"></i> Dash</button>
+            <button onclick="show('quest')"><i class="fa-solid fa-scroll"></i> Quest</button>
+            <button onclick="show('trophy')"><i class="fa-solid fa-ranking-star"></i> Stats</button>
+            <button onclick="location.reload()" style="background:#ff4757; color:white;">Exit</button>
+        </nav>
 
-    <div id="trophy-section" class="hidden">
-      <div class="card">
-        <h3>Achievements</h3>
-        <div class="badge-grid" id="badge-box"></div>
-      </div>
+        <div id="dash-section">
+            <div class="card">
+                <div class="metrics-grid">
+                    <div><p class="metric-label">Level</p><p class="metric-value" id="ui-lvl">1</p></div>
+                    <div><p class="metric-label">Streak</p><p class="metric-value streak-active" id="ui-streak"><i class="fa-solid fa-fire"></i> 0</p></div>
+                </div>
+                <div class="progress-bar-bg"><div id="xp-bar" class="progress-bar-fill"></div></div>
+                <p style="font-size: 0.75rem; color: #888;">XP: <span id="ui-xp">0</span> / 500</p>
+            </div>
+           
+            <div class="card highlight-card">
+                <h3>Log Action</h3>
+                <input type="number" id="mins" placeholder="Minutes active">
+                <button onclick="alert('Action recorded in history!')">Save Data</button>
+            </div>
+        </div>
+
+        <div id="quest-section" class="hidden">
+            <div class="card highlight-card">
+                <h3 id="q-task" style="text-align:left; color:#00ff9d;"></h3>
+                <p id="q-tip" style="text-align:left; font-size:0.9rem; border-left:3px solid #ffc107; padding-left:10px;"></p>
+                <button id="q-btn" onclick="done()" style="width:100%; background:#ffc107; margin-top:10px; color:#121212;">Claim +50 XP</button>
+            </div>
+        </div>
+
+        <div id="trophy-section" class="hidden">
+            <div class="card">
+                <h3>Leaderboard</h3>
+                <table class="leaderboard-table" id="leaderboard-body"></table>
+            </div>
+            <div class="card">
+                <h3>Trophies</h3>
+                <div class="badge-grid" id="badge-box"></div>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <script>
-let user = { xp: 0, done: 0, ach: [] };
+// --- CORE DATA ---
+let user = { username: "PlayerOne", xp: 0, done: 0, streak: 0, lastDate: "", ach: [] };
 let emailKey = "";
 
-const challenges = ["Do 10 pushups", "Drink water", "Stretch back", "Clean desk", "15 squats", "20 jumping jacks", "Wipe screen", "10 deep breaths", "Walk 2 mins", "Touch toes"];
-const tips = ["Blink often", "Sit straight", "5 min break", "Stay hydrated", "Monitor at eye level", "Rest eyes", "No sugar snacks"];
+const challenges = [
+    "Do 10 pushups", "Drink a large glass of water", "Stretch for 2 mins", "Clean your desk space",
+    "15 squats", "20 jumping jacks", "Wipe your monitor/screen", "10 deep breaths",
+    "Walk for 5 minutes", "Touch your toes for 30s", "Hold a plank for 30s", "Organize 5 phone apps",
+    "Rest your eyes for 1 min", "Walk up/down stairs", "Eat a piece of fruit"
+];
 
+const tips = [
+    "Blink every 20 seconds", "Adjust your chair height", "Take a 5-min movement break",
+    "Stay hydrated with water", "Keep monitor at eye level", "Rest your eyes from blue light",
+    "Keep your feet flat on the floor", "Avoid sugary snacks for energy"
+];
+
+const npcs = [
+    { u: "ShadowNinja", x: 2850 },
+    { u: "PixelHero", x: 1950 },
+    { u: "QuestMaster", x: 1200 },
+    { u: "HabitRunner", x: 450 }
+];
+
+// --- NAVIGATION ---
 function show(id) {
-  ['dash','quest','trophy'].forEach(s => document.getElementById(s+'-section').classList.add('hidden'));
-  document.getElementById(id+'-section').classList.remove('hidden');
-  if(id === 'quest') rollQuest();
-  if(id === 'trophy') renderAch();
+    ['dash','quest','trophy'].forEach(s => document.getElementById(s+'-section').classList.add('hidden'));
+    document.getElementById(id+'-section').classList.remove('hidden');
+    if(id === 'quest') rollQuest();
+    if(id === 'trophy') { renderLeaderboard(); renderAch(); }
 }
 
+// --- AUTH & LOAD ---
 function login() {
-  emailKey = "u_" + document.getElementById('email').value;
-  let saved = localStorage.getItem(emailKey);
-  if(saved) user = JSON.parse(saved);
-  // NaN Protection
-  user.xp = Number(user.xp) || 0;
-  user.done = Number(user.done) || 0;
-  user.ach = user.ach || [];
- 
-  document.getElementById('auth-section').classList.add('hidden');
-  document.getElementById('app-content').classList.remove('hidden');
-  updateUI();
+    const emailInput = document.getElementById('email').value;
+    const nameInput = document.getElementById('username').value;
+    if(!emailInput) return alert("Please enter an email");
+   
+    emailKey = "u_" + emailInput;
+    let saved = localStorage.getItem(emailKey);
+   
+    if(saved) {
+        user = JSON.parse(saved);
+    } else {
+        user.username = nameInput || "PlayerOne";
+    }
+
+    // Protection against broken data
+    user.xp = Number(user.xp) || 0;
+    user.done = Number(user.done) || 0;
+    user.streak = Number(user.streak) || 0;
+    user.ach = user.ach || [];
+
+    updateStreak();
+    document.getElementById('auth-section').classList.add('hidden');
+    document.getElementById('app-content').classList.remove('hidden');
+    updateUI();
 }
 
-function logT() { alert("Time logged to history!"); }
+function updateStreak() {
+    const today = new Date().toLocaleDateString();
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = yesterday.toLocaleDateString();
 
+    if (user.lastDate !== yesterdayStr && user.lastDate !== today) {
+        user.streak = 0; // Reset if they missed a day
+    }
+}
+
+// --- QUEST LOGIC ---
 function rollQuest() {
-  document.getElementById('q-task').innerText = "Quest: " + challenges[Math.floor(Math.random()*challenges.length)];
-  document.getElementById('q-tip').innerText = "Pro Tip: " + tips[Math.floor(Math.random()*tips.length)];
-  document.getElementById('q-btn').disabled = false;
-  document.getElementById('q-btn').innerText = "Finish Quest (+50 XP)";
+    document.getElementById('q-task').innerText = "Mission: " + challenges[Math.floor(Math.random()*challenges.length)];
+    document.getElementById('q-tip').innerText = "Pro Tip: " + tips[Math.floor(Math.random()*tips.length)];
+    const btn = document.getElementById('q-btn');
+    btn.disabled = false;
+    btn.innerText = "Claim +50 XP";
+    btn.style.background = "#ffc107";
 }
 
 function done() {
-  let oldL = Math.floor(user.xp / 500) + 1;
-  user.xp += 50;
-  user.done += 1;
-  let newL = Math.floor(user.xp / 500) + 1;
+    const today = new Date().toLocaleDateString();
+    let oldL = Math.floor(user.xp / 500) + 1;
+   
+    // Gain XP
+    user.xp += 50;
+    user.done += 1;
 
-  if(newL > oldL) {
-    document.getElementById('lvl-snd').play();
-    document.body.classList.add('level-up-flash');
-    setTimeout(()=> document.body.classList.remove('level-up-flash'), 200);
-  }
- 
-  checkAch();
-  save();
-  updateUI();
-  document.getElementById('q-btn').disabled = true;
-  document.getElementById('q-btn').innerText = "Quest Completed!";
+    // Handle Streak
+    if (user.lastDate !== today) {
+        user.streak += 1;
+        user.lastDate = today;
+        if (user.streak % 3 === 0) {
+            user.xp += 100;
+            alert("🔥 3-DAY STREAK! +100 XP BONUS!");
+        }
+    }
+
+    let newL = Math.floor(user.xp / 500) + 1;
+   
+    // Level Up Effects
+    if(newL > oldL) {
+        document.getElementById('lvl-snd').play();
+        document.body.classList.add('level-up-flash');
+        setTimeout(()=> document.body.classList.remove('level-up-flash'), 200);
+        alert("✨ LEVEL UP! You reached Level " + newL + " ✨");
+    }
+   
+    checkAch();
+    save();
+    updateUI();
+   
+    const btn = document.getElementById('q-btn');
+    btn.disabled = true;
+    btn.innerText = "Mission Complete!";
+    btn.style.background = "#444";
 }
 
+// --- UI UPDATES ---
 function updateUI() {
-  document.getElementById('ui-xp').innerText = user.xp;
-  document.getElementById('ui-lvl').innerText = Math.floor(user.xp / 500) + 1;
-  document.getElementById('xp-bar').style.width = (user.xp % 500 / 500 * 100) + "%";
+    const currentXP = Number(user.xp) || 0;
+    document.getElementById('ui-xp').innerText = currentXP;
+    document.getElementById('ui-lvl').innerText = Math.floor(currentXP / 500) + 1;
+    document.getElementById('ui-streak').innerHTML = `<i class="fa-solid fa-fire"></i> ${user.streak}`;
+    document.getElementById('xp-bar').style.width = (currentXP % 500 / 500 * 100) + "%";
+}
+
+function renderLeaderboard() {
+    const table = document.getElementById('leaderboard-body');
+    let all = [...npcs, {u:user.username, x:user.xp}].sort((a,b)=>b.x-a.x);
+    table.innerHTML = `<tr><td>Rank</td><td>Player</td><td>XP</td></tr>`;
+    all.forEach((p, i) => {
+        const isMe = (p.u === user.username);
+        table.innerHTML += `<tr class="${isMe?'user-row':''}"><td>#${i+1}</td><td>${p.u}</td><td>${p.x}</td></tr>`;
+    });
 }
 
 function checkAch() {
-  if(user.done >= 1 && !user.ach.includes('a1')) { user.ach.push('a1'); alert("Unlocked: First Quest!"); }
-  if(user.xp >= 1000 && !user.ach.includes('a2')) { user.ach.push('a2'); alert("Unlocked: Veteran!"); }
+    if(user.done >= 1 && !user.ach.includes('a1')) user.ach.push('a1');
+    if(user.xp >= 1000 && !user.ach.includes('a2')) user.ach.push('a2');
+    if(user.streak >= 3 && !user.ach.includes('a3')) user.ach.push('a3');
 }
 
 function renderAch() {
-  const box = document.getElementById('badge-box');
-  const list = [{id:'a1', n:'Rookie', i:'fa-star'}, {id:'a2', n:'Elite', i:'fa-trophy'}];
-  box.innerHTML = list.map(a => `
-    <div class="badge ${user.ach.includes(a.id)?'unlocked':''}">
-      <i class="fa-solid ${a.i}" style="font-size:1.5rem; color:#ffc107"></i><br>
-      <span style="font-size:0.7rem">${a.n}</span>
-    </div>
-  `).join('');
+    const box = document.getElementById('badge-box');
+    const list = [
+        {id:'a1', n:'First Step', i:'fa-shoe-prints'},
+        {id:'a2', n:'Veteran', i:'fa-medal'},
+        {id:'a3', n:'On Fire', i:'fa-fire-burner'}
+    ];
+    box.innerHTML = list.map(a => `
+        <div class="badge ${user.ach.includes(a.id)?'unlocked':''}">
+            <i class="fa-solid ${a.i}" style="font-size:1.5rem; color:#ffc107"></i><br>
+            <span style="font-size:0.65rem; font-weight:bold;">${a.n}</span>
+        </div>
+    `).join('');
 }
 
 function save() { localStorage.setItem(emailKey, JSON.stringify(user)); }
